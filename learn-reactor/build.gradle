@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group = 'guohao.learn'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    maven{ url 'https://maven.aliyun.com/repository/central' }
+    maven{ url 'https://maven.aliyun.com/repository/public' }
+    maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform('io.projectreactor:reactor-bom:2023.0.0')
+    implementation 'io.projectreactor:reactor-core'
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
