@@ -7,7 +7,7 @@ version = '1.0-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 
@@ -19,8 +19,14 @@ repositories {
 }
 
 dependencies {
+    // reactor
     implementation platform('io.projectreactor:reactor-bom:2023.0.0')
     implementation 'io.projectreactor:reactor-core'
+    implementation 'io.projectreactor:reactor-tools'
+    // log
+    implementation 'org.slf4j:slf4j-api:1.7.28'
+    implementation 'org.slf4j:slf4j-simple:1.7.28'
+    // test
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
