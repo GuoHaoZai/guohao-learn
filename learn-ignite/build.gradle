@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group = 'guohao.learn'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+repositories {
+    maven{ url 'https://maven.aliyun.com/repository/central' }
+    maven{ url 'https://maven.aliyun.com/repository/public' }
+    maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.ignite:ignite-core:2.15.0'
+//    implementation 'org.apache.ignite:ignite-spring:2.15.0'
+//    implementation 'org.apache.ignite:ignite-indexing:2.15.0'
+}
