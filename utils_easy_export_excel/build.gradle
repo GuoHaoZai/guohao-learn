@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+group = 'guohao.learn'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+repositories {
+    maven{ url 'https://maven.aliyun.com/repository/central' }
+    maven{ url 'https://maven.aliyun.com/repository/public' }
+    maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:32.0.0-jre'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.alibaba:easyexcel:3.3.2'
+
+    implementation 'org.projectlombok:lombok:1.18.2'
+    testImplementation 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+
+    // test
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
