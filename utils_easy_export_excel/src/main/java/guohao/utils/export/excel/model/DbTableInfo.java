@@ -26,10 +26,8 @@ public class DbTableInfo {
 
     @SneakyThrows
     public ResultSet query() {
-        try (Connection connection = dbInfo.getDataSource().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("select * from " + dbTableName + " where " + filters);
-             ) {
-            return preparedStatement.executeQuery();
-        }
+        Connection connection = dbInfo.getDataSource().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from " + dbTableName + " where " + filters);
+        return preparedStatement.executeQuery();
     }
 }

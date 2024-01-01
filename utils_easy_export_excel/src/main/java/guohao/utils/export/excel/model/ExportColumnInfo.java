@@ -32,7 +32,7 @@ public class ExportColumnInfo {
     /**
      * 导出值映射
      */
-    private Map<String, String> exportMappingValue;
+    private Map<Object, Object> exportMappingValue = new HashMap<>();
 
     private ExportRelateTableInfo exportRelateTableInfo;
 
@@ -42,6 +42,12 @@ public class ExportColumnInfo {
      * 数据库名
      */
     private DbColumnInfo dbColumnInfo;
+
+
+    public ExportColumnInfo putExportMappingValue(Object oldValue, Object newValue) {
+        this.exportMappingValue.put(oldValue, newValue);
+        return this;
+    }
 
     public static class ExportMultiMerge {
         private MergeStrategy strategy = MergeStrategy.BY_ROW;
@@ -77,9 +83,11 @@ public class ExportColumnInfo {
     public void data(ResultSet resultSet, List<Object> line) {
         Object columnValue = resultSet.getObject(dbColumnInfo.getDbColumnName());
 
-        String stringColumnValue = String.valueOf(columnValue);
-        String result = this.getExportMappingValue().getOrDefault(stringColumnValue, stringColumnValue);
-        line.add(result);
+        if (this.getExportMappingValue().containsKey(String.valueOf(columnValue))) {
+            line.add(this.getExportMappingValue().get(String.valueOf(columnValue)));
+        } else {
+            line.add(columnValue);
+        }
     }
 
     public enum MergeStrategy {

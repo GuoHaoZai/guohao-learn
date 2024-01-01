@@ -23,6 +23,7 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.alibaba:easyexcel:3.3.2'
     implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation 'mysql:mysql-connector-java:8.0.29'
 
     implementation 'org.projectlombok:lombok:1.18.2'
     testImplementation 'org.projectlombok:lombok:1.18.2'
@@ -31,6 +32,8 @@ dependencies {
     // test
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.18.3'
 }
 
 test {

@@ -314,6 +314,5 @@ public class TestHeadGenerate {
                                         List.of("性别", "女2")
                                 ),
                                 exportRoot.head());
-        exportRoot.export();
     }
 }
