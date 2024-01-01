@@ -3,9 +3,11 @@ package guohao.utils.export.excel.model;
 import com.google.common.collect.Lists;
 import lombok.Builder;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.sql.ResultSet;
 import java.util.*;
 
 /**
@@ -69,6 +71,15 @@ public class ExportColumnInfo {
                     result.add(Lists.newArrayList(Optional.ofNullable(exportColumnName).orElseGet(dbColumnInfo::getDbColumnName)));
                     return result;
                 });
+    }
+
+    @SneakyThrows
+    public void data(ResultSet resultSet, List<Object> line) {
+        Object columnValue = resultSet.getObject(dbColumnInfo.getDbColumnName());
+
+        String stringColumnValue = String.valueOf(columnValue);
+        String result = this.getExportMappingValue().getOrDefault(stringColumnValue, stringColumnValue);
+        line.add(result);
     }
 
     public enum MergeStrategy {

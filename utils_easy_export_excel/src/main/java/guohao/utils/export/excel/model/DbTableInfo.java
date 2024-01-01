@@ -2,15 +2,17 @@ package guohao.utils.export.excel.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 
-import javax.annotation.Nullable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @Data
 @Builder
 @FieldDefaults(makeFinal = true)
 public class DbTableInfo {
-    @Nullable
     private DbInfo dbInfo;
     /**
      * 数据库表信息
@@ -21,4 +23,13 @@ public class DbTableInfo {
      * 数据库表过滤信息
      */
     private String filters;
+
+    @SneakyThrows
+    public ResultSet query() {
+        try (Connection connection = dbInfo.getDataSource().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("select * from " + dbTableName + " where " + filters);
+             ) {
+            return preparedStatement.executeQuery();
+        }
+    }
 }

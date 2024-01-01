@@ -3,11 +3,12 @@ package guohao.utils.export.excel.model;
 import com.alibaba.excel.EasyExcelFactory;
 import lombok.Builder;
 import lombok.Data;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.collections4.ListUtils;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -38,6 +39,9 @@ public class ExportRoot {
                 .doWrite(data());
     }
 
+    /**
+     * @apiNote 返回的一定需要是可变list
+     */
     public List<List<String>> head() {
         return getExportColumnsInfo().stream()
                 .map(ExportColumnInfo::head)
@@ -45,7 +49,18 @@ public class ExportRoot {
                 .orElse(new ArrayList<>());
     }
 
+    @SneakyThrows
     public List<List<Object>> data() {
-        return Collections.emptyList();
+        ResultSet resultSet = dbTableInfo.query();
+
+        List<List<Object>> result = new ArrayList<>();
+        while (resultSet.next()) {
+            List<Object> line = new ArrayList<>();
+            for (ExportColumnInfo exportColumnInfo : exportColumnsInfo) {
+                exportColumnInfo.data(resultSet, line);
+            }
+            result.add(line);
+        }
+        return result;
     }
 }
