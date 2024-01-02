@@ -58,7 +58,6 @@ public class ExportColumnInfo {
     public List<List<String>> head() {
         return Optional.ofNullable(exportRelateTableInfo)
                 .map(ExportRelateTableInfo::head)
-                .filter(CollectionUtils::isNotEmpty)
                 .map(heads -> {
                     if (Objects.isNull(exportColumnName)) {
                         return heads;
@@ -71,7 +70,6 @@ public class ExportColumnInfo {
                     }
                     return result;
                 })
-                .filter(CollectionUtils::isNotEmpty)
                 .orElseGet(()-> {
                     List<List<String>> result = new ArrayList<>();
                     result.add(Lists.newArrayList(Optional.ofNullable(exportColumnName).orElseGet(dbColumnInfo::getDbColumnName)));
