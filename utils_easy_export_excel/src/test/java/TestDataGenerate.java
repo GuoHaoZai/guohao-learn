@@ -49,6 +49,47 @@ class TestDataGenerate {
     }
 
     @Test
+    void complexTest() throws SQLException {
+        ResultSet resultSet = MockResultSet.create(new String[]{"id", "name"},
+                                                   new Object[][]{
+                                                           {1, "a"},
+                                                           {2, "b"},
+                                                   });
+
+        DbTableInfo dbTableInfo = Mockito.mock(DbTableInfo.class);
+        Mockito.when(dbTableInfo.query()).thenReturn(resultSet);
+        ExportRoot exportRoot = ExportRoot.builder()
+                .dbTableInfo(dbTableInfo)
+                .exportColumnsInfo(List.of(
+                        ExportColumnInfo.builder()
+                                .exportColumnName("id")
+                                .dbColumnInfo(DbColumnInfo.builder()
+                                                      .dbColumnName("id")
+                                                      .build())
+                                .build(),
+                        ExportColumnInfo.builder()
+                                .exportColumnName("姓名")
+                                .dbColumnInfo(DbColumnInfo.builder()
+                                                      .dbColumnName("name")
+                                                      .build())
+                                .build(),
+                        ExportColumnInfo.builder()
+                                .exportColumnName("extendIds")
+                                .dbColumnInfo(DbColumnInfo.builder()
+                                                      .dbColumnName("extendIds")
+//                                                      .dbTableInfo()
+                                                      .dbColumnValueProcessor(new DbColumnInfo.ColumnValueProcessor(DbColumnInfo.DbColumnValueStrategy.SPLITTER, ","))
+                                                      .build())
+                                .dbColumnInfo(DbColumnInfo.builder()
+                                                      .dbColumnName("name")
+                                                      .build())
+                                .build()
+                        ))
+                .build();
+        System.out.println(exportRoot.data());
+    }
+
+    @Test
     void test_exportMapping() throws SQLException {
         ResultSet resultSet = MockResultSet.create(new String[]{"id", "name"},
                                                    new Object[][]{

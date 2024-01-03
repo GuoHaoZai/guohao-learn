@@ -1,14 +1,17 @@
 package guohao.utils.export.excel.model;
 
 import com.google.common.collect.Lists;
+import guohao.utils.export.excel.utils.Blocks;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.collections4.CollectionUtils;
 
+import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 导出列信息
@@ -49,6 +52,10 @@ public class ExportColumnInfo {
         return this;
     }
 
+    public Optional<ExportRelateTableInfo> getExportRelateTableInfo() {
+        return Optional.ofNullable(exportRelateTableInfo);
+    }
+
     public static class ExportMultiMerge {
         private MergeStrategy strategy = MergeStrategy.BY_ROW;
         private String columnSplitter = ",";
@@ -70,7 +77,7 @@ public class ExportColumnInfo {
                     }
                     return result;
                 })
-                .orElseGet(()-> {
+                .orElseGet(() -> {
                     List<List<String>> result = new ArrayList<>();
                     result.add(Lists.newArrayList(Optional.ofNullable(exportColumnName).orElseGet(dbColumnInfo::getDbColumnName)));
                     return result;
@@ -78,13 +85,27 @@ public class ExportColumnInfo {
     }
 
     @SneakyThrows
-    public void data(ResultSet resultSet, List<Object> line) {
-        Object columnValue = resultSet.getObject(dbColumnInfo.getDbColumnName());
+    public Object[][] data(ResultSet resultSet) {
+        Object processResult = Optional.ofNullable(resultSet.getObject(dbColumnInfo.getDbColumnName()))
+                .map(this.getDbColumnInfo()::process)
+                .orElse(null);
+        Object mappingResult = exportMapping(processResult);
 
-        if (this.getExportMappingValue().containsKey(String.valueOf(columnValue))) {
-            line.add(this.getExportMappingValue().get(String.valueOf(columnValue)));
+        return getExportRelateTableInfo()
+                .map(theExportRelateTableInfo -> theExportRelateTableInfo.data(mappingResult))
+                .orElseGet(()-> new Object[][]{{mappingResult}});
+    }
+
+    Object exportMapping(Object processResult) {
+        if (this.getExportMappingValue().isEmpty()) {
+            return processResult;
+        }
+        if (processResult instanceof Collection) {
+            return ((Collection)processResult).stream()
+                    .map(value -> this.getExportMappingValue().getOrDefault(value, value))
+                    .collect(Collectors.toList());
         } else {
-            line.add(columnValue);
+            return this.getExportMappingValue().getOrDefault(processResult, processResult);
         }
     }
 

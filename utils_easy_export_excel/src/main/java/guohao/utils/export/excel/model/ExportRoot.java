@@ -1,6 +1,8 @@
 package guohao.utils.export.excel.model;
 
 import com.alibaba.excel.EasyExcelFactory;
+import com.google.common.collect.Table;
+import guohao.utils.export.excel.utils.Blocks;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -55,11 +57,11 @@ public class ExportRoot {
 
         List<List<Object>> result = new ArrayList<>();
         while (resultSet.next()) {
-            List<Object> line = new ArrayList<>();
+            Blocks blocks = new Blocks();
             for (ExportColumnInfo exportColumnInfo : exportColumnsInfo) {
-                exportColumnInfo.data(resultSet, line);
+                blocks.addBlock(exportColumnInfo.data(resultSet));
             }
-            result.add(line);
+            result.addAll(blocks.mergeToList());
         }
         return result;
     }
