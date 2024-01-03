@@ -1,6 +1,5 @@
 package guohao.utils.export.excel.model;
 
-import com.alibaba.excel.util.StringUtils;
 import com.google.common.base.Splitter;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +8,8 @@ import lombok.experimental.FieldDefaults;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.sql.ResultSet;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,6 +28,14 @@ public class DbColumnInfo {
     @Nonnull
     public ColumnValueProcessor getDbColumnValueProcessor() {
         return Optional.ofNullable(dbColumnValueProcessor).orElse(ColumnValueProcessor.DEFAULT);
+    }
+
+    public ResultSet query(Object relateValue) {
+        if (relateValue instanceof Collection) {
+            return dbTableInfo.query((Collection<Object>) relateValue, dbColumnName);
+        } else {
+            return dbTableInfo.query(relateValue, dbColumnName);
+        }
     }
 
     public Object process(@Nullable Object dbValue) {

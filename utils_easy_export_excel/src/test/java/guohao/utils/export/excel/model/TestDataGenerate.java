@@ -1,5 +1,5 @@
-import guohao.utils.export.excel.model.*;
-import lombok.SneakyThrows;
+package guohao.utils.export.excel.model;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -48,16 +48,37 @@ class TestDataGenerate {
                                 exportRoot.data());
     }
 
+
     @Test
     void complexTest() throws SQLException {
-        ResultSet resultSet = MockResultSet.create(new String[]{"id", "name"},
-                                                   new Object[][]{
-                                                           {1, "a"},
-                                                           {2, "b"},
-                                                   });
-
         DbTableInfo dbTableInfo = Mockito.mock(DbTableInfo.class);
-        Mockito.when(dbTableInfo.query()).thenReturn(resultSet);
+        Mockito.when(dbTableInfo.query())
+                .thenAnswer(invocation -> {
+                    return MockResultSet.create(new String[]{"id", "name", "extend_ids"},
+                                                new Object[][]{
+                                                        {1, "a", "1,2"},
+                                                        {2, "b", "3,4"},
+                                                });
+                });
+
+        DbTableInfo relaTableInfo = Mockito.mock(DbTableInfo.class);
+        Mockito.when(relaTableInfo.query(Mockito.any(), Mockito.anyString()))
+                .thenAnswer((invocation) -> {
+                    return MockResultSet.create(new String[]{"id", "rela_name"},
+                                                new Object[][]{
+                                                        {1, "rela_a"},
+                                                        {2, "rela_b"},
+                                                });
+                });
+        Mockito.when(relaTableInfo.query(Mockito.anyCollection(), Mockito.anyString()))
+                .thenAnswer((invocation) -> {
+                    return MockResultSet.create(new String[]{"id", "rela_name"},
+                                                new Object[][]{
+                                                        {1, "rela_a"},
+                                                        {2, "rela_b"},
+                                                });
+                });
+
         ExportRoot exportRoot = ExportRoot.builder()
                 .dbTableInfo(dbTableInfo)
                 .exportColumnsInfo(List.of(
@@ -74,17 +95,27 @@ class TestDataGenerate {
                                                       .build())
                                 .build(),
                         ExportColumnInfo.builder()
-                                .exportColumnName("extendIds")
+                                .exportColumnName("extend")
                                 .dbColumnInfo(DbColumnInfo.builder()
-                                                      .dbColumnName("extendIds")
-//                                                      .dbTableInfo()
+                                                      .dbColumnName("extend_ids")
                                                       .dbColumnValueProcessor(new DbColumnInfo.ColumnValueProcessor(DbColumnInfo.DbColumnValueStrategy.SPLITTER, ","))
                                                       .build())
-                                .dbColumnInfo(DbColumnInfo.builder()
-                                                      .dbColumnName("name")
-                                                      .build())
+                                .exportRelateTableInfo(ExportRelateTableInfo.builder()
+                                                               .dbColumnInfo(DbColumnInfo.builder()
+                                                                                     .dbTableInfo(relaTableInfo)
+                                                                                     .dbColumnName("id")
+                                                                                     .build())
+                                                               .exportColumnsInfo(List.of(
+                                                                       ExportColumnInfo.builder()
+                                                                               .exportColumnName("关联名")
+                                                                               .dbColumnInfo(DbColumnInfo.builder()
+                                                                                                     .dbColumnName("rela_name")
+                                                                                                     .build())
+                                                                               .build()
+                                                               ))
+                                                               .build())
                                 .build()
-                        ))
+                ))
                 .build();
         System.out.println(exportRoot.data());
     }

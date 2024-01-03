@@ -1,5 +1,6 @@
 package guohao.utils.export.excel.model;
 
+import guohao.utils.export.excel.utils.Blocks;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -9,7 +10,6 @@ import org.apache.commons.collections4.ListUtils;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Data
 @Builder
@@ -29,7 +29,16 @@ public class ExportRelateTableInfo {
 
     @SneakyThrows
     public Object[][] data(Object values) {
-        // TODO
-        return null;
+        ResultSet resultSet = dbColumnInfo.query(values);
+
+        List<Object[]> result = new ArrayList<>();
+        while (resultSet.next()) {
+            Blocks blocks = new Blocks();
+            for (ExportColumnInfo exportColumnInfo : exportColumnsInfo) {
+                blocks.addBlock(exportColumnInfo.data(resultSet));
+            }
+            result.addAll(blocks.mergeToArray());
+        }
+        return result.toArray(new Object[0][0]);
     }
 }

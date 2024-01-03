@@ -1,4 +1,5 @@
-import guohao.utils.export.excel.model.*;
+package guohao.utils.export.excel.model;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * @author guohao
  * @since 2023/12/29
  */
-public class TestHeadGenerate {
+class TestHeadGenerate {
 
     /**
      * 单行表头，全部使用{@link ExportColumnInfo#getExportColumnName()}

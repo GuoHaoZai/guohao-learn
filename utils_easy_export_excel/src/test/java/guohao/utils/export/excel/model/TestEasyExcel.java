@@ -1,11 +1,8 @@
+package guohao.utils.export.excel.model;
+
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.write.merge.LoopMergeStrategy;
 import com.google.common.collect.Lists;
-import guohao.utils.export.excel.model.DbColumnInfo;
-import guohao.utils.export.excel.model.ExportColumnInfo;
-import guohao.utils.export.excel.model.ExportRelateTableInfo;
-import guohao.utils.export.excel.model.ExportRoot;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
  * @author guohao
  * @since 2023/12/29
  */
-public class TestEasyExcel {
+class TestEasyExcel {
 
     /**
      * <table border="2">

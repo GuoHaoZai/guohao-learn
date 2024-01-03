@@ -27,6 +27,11 @@ public class Blocks {
                 .collect(Collectors.toList());
     }
 
+    public List<Object[]> mergeToArray() {
+        return Arrays.stream(merge())
+                .collect(Collectors.toList());
+    }
+
     public Object[][] merge() {
         Object[][] result = new Object[this.maxRow][this.sumCol];
         int curCol = 0;

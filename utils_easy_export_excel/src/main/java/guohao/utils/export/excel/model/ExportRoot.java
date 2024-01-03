@@ -1,7 +1,6 @@
 package guohao.utils.export.excel.model;
 
 import com.alibaba.excel.EasyExcelFactory;
-import com.google.common.collect.Table;
 import guohao.utils.export.excel.utils.Blocks;
 import lombok.Builder;
 import lombok.Data;
@@ -44,7 +43,7 @@ public class ExportRoot {
     /**
      * @apiNote 返回的一定需要是可变list
      */
-    public List<List<String>> head() {
+    List<List<String>> head() {
         return getExportColumnsInfo().stream()
                 .map(ExportColumnInfo::head)
                 .reduce(ListUtils::union)
@@ -52,7 +51,7 @@ public class ExportRoot {
     }
 
     @SneakyThrows
-    public List<List<Object>> data() {
+    List<List<Object>> data() {
         ResultSet resultSet = dbTableInfo.query();
 
         List<List<Object>> result = new ArrayList<>();

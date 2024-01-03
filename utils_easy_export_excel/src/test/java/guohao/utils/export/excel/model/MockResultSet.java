@@ -1,4 +1,5 @@
-import org.mockito.Mock;
+package guohao.utils.export.excel.model;
+
 import org.mockito.Mockito;
 
 import java.sql.ResultSet;
@@ -12,7 +13,7 @@ import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.*;
 
-public class MockResultSet {
+class MockResultSet {
     private final Map<String, Integer> columnIndices;
     private final Object[][] data;
     private int rowIndex;

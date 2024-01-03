@@ -6,8 +6,9 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Collection;
+import java.util.StringJoiner;
 
 @Data
 @Builder
@@ -27,7 +28,32 @@ public class DbTableInfo {
     @SneakyThrows
     public ResultSet query() {
         Connection connection = dbInfo.getDataSource().getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("select * from " + dbTableName + " where " + filters);
-        return preparedStatement.executeQuery();
+        String sql = "select * from " + dbTableName + " where " + filters;
+        System.out.println(sql);
+        return connection.prepareStatement(sql).executeQuery();
+    }
+
+    @SneakyThrows
+    public ResultSet query(Object value, String column) {
+        Connection connection = dbInfo.getDataSource().getConnection();
+        String sql = "select * from " + dbTableName + " where `" + column + "` = " + value;
+        if (filters != null) {
+            sql += " and " + filters;
+        }
+        System.out.println(sql);
+        return connection.prepareStatement(sql).executeQuery();
+    }
+
+    @SneakyThrows
+    public ResultSet query(Collection<Object> values, String column) {
+        Connection connection = dbInfo.getDataSource().getConnection();
+        StringJoiner stringJoiner = new StringJoiner(",");
+        values.forEach(value -> stringJoiner.add(value.toString()));
+        String sql = "select * from " + dbTableName + " where `" + column + "` IN (" + stringJoiner + ")";
+        if (filters != null) {
+            sql += " and " + filters;
+        }
+        System.out.println(sql);
+        return connection.prepareStatement(sql).executeQuery();
     }
 }
