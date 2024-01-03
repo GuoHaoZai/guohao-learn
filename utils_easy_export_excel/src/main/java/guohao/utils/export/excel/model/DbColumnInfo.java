@@ -31,7 +31,9 @@ public class DbColumnInfo {
     }
 
     public ResultSet query(Object relateValue) {
-        if (relateValue instanceof Collection) {
+        if (relateValue == null) {
+            return dbTableInfo.query();
+        } else if (relateValue instanceof Collection) {
             return dbTableInfo.query((Collection<Object>) relateValue, dbColumnName);
         } else {
             return dbTableInfo.query(relateValue, dbColumnName);

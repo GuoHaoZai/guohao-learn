@@ -1,14 +1,11 @@
 package guohao.utils.export.excel.model;
 
 import com.google.common.collect.Lists;
-import guohao.utils.export.excel.utils.Blocks;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.collections4.CollectionUtils;
 
-import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -99,9 +96,8 @@ public class ExportColumnInfo {
     Object exportMapping(Object processResult) {
         if (this.getExportMappingValue().isEmpty()) {
             return processResult;
-        }
-        if (processResult instanceof Collection) {
-            return ((Collection)processResult).stream()
+        } else if (processResult instanceof Collection) {
+            return ((Collection<?>)processResult).stream()
                     .map(value -> this.getExportMappingValue().getOrDefault(value, value))
                     .collect(Collectors.toList());
         } else {
